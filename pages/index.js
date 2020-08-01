@@ -1,209 +1,342 @@
-import Head from 'next/head'
+import React, { useState, useEffect } from 'react';
+import { CSSTransition } from 'react-transition-group';
 
-export default function Home() {
+const Index = () => (
+  <div className="p-4 bg-white rounded shadow">
+    <h1 className="text-2xl font-bold">Next.js</h1>
+    <p className="text-gray-500">
+      with Tailwind CSS & postcss-preset-env. Now uses tailwind purge method for
+      production builds.
+    </p>
+
+    <BottomSwipeable />
+  </div>
+);
+
+const BottomSwipeable = () => {
+  const [showFullMenu, setShowFullMenu] = useState(false);
+  const [botherable, setBotherable] = useState(true);
+
+  const [localBotherable, setLocalBotherable] = useState(botherable);
+
+  const [showContextMenu, setShowContextMenu] = useState(false);
+
   return (
-    <div className="container">
-      <Head>
-        <title>Create Next App</title>
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
-
-      <main>
-        <h1 className="title">
-          Welcome to <a href="https://nextjs.org">Next.js!</a>
-        </h1>
-
-        <p className="description">
-          Get started by editing <code>pages/index.js</code>
-        </p>
-
-        <div className="grid">
-          <a href="https://nextjs.org/docs" className="card">
-            <h3>Documentation &rarr;</h3>
-            <p>Find in-depth information about Next.js features and API.</p>
-          </a>
-
-          <a href="https://nextjs.org/learn" className="card">
-            <h3>Learn &rarr;</h3>
-            <p>Learn about Next.js in an interactive course with quizzes!</p>
-          </a>
-
-          <a
-            href="https://github.com/vercel/next.js/tree/master/examples"
-            className="card"
-          >
-            <h3>Examples &rarr;</h3>
-            <p>Discover and deploy boilerplate example Next.js projects.</p>
-          </a>
-
-          <a
-            href="https://vercel.com/import?filter=next.js&utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className="card"
-          >
-            <h3>Deploy &rarr;</h3>
-            <p>
-              Instantly deploy your Next.js site to a public URL with Vercel.
-            </p>
-          </a>
-        </div>
-      </main>
-
-      <footer>
-        <a
-          href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
+    <div class="absolute bottom-0 left-0  w-full  text-white background-gray">
+      <div class="flex flex-col">
+        {/* bottom menu / partial */}
+        <div
+          class="flex flex-row justify-between p-3"
+          onClick={() => setShowFullMenu(!showFullMenu)}
         >
-          Powered by{' '}
-          <img src="/vercel.svg" alt="Vercel Logo" className="logo" />
-        </a>
-      </footer>
+          <div class="flex flex-row">
+            <div class="p-1">😀</div>
+            <div class="p-1">Marcus</div>
+          </div>
 
-      <style jsx>{`
-        .container {
-          min-height: 100vh;
-          padding: 0 0.5rem;
-          display: flex;
-          flex-direction: column;
-          justify-content: center;
-          align-items: center;
-        }
+          {botherable ? (
+            <div class="bg-green-900 bg-opacity-75 h-5 w-5 m-1 rounded-lg flex">
+              <div class="bg-green-300 h-2 w-2 m-auto rounded-full flex justify-center"></div>
+            </div>
+          ) : (
+            <div class="bg-red-900 bg-opacity-75 h-5 w-5 m-1 rounded-lg flex">
+              <div class="bg-red-700 h-2 w-2 m-auto rounded-full flex justify-center"></div>
+            </div>
+          )}
+        </div>
 
-        main {
-          padding: 5rem 0;
-          flex: 1;
-          display: flex;
-          flex-direction: column;
-          justify-content: center;
-          align-items: center;
-        }
+        {/* Remaining part of menu */}
+        <CSSTransition
+          in={showFullMenu}
+          timeout={300}
+          classNames="alert"
+          unmountOnExit
+        >
+          <div>
+            <div class="h-px bg-gray-900"></div>
+            <div class="p-1 flex flex-col p-3">
+              <span class="text-gray-600">Status update:</span>
+              <div class="flex flex-row justify-between py-2">
+                <span>Set status to</span>
 
-        footer {
-          width: 100%;
-          height: 100px;
-          border-top: 1px solid #eaeaea;
-          display: flex;
-          justify-content: center;
-          align-items: center;
-        }
+                <div
+                  class={`${
+                    localBotherable
+                      ? 'text-green-500 bg-green-900'
+                      : 'text-red-500 bg-red-900'
+                  } bg-opacity-75 rounded-full px-2 font-bold`}
+                  onClick={() => setLocalBotherable(!localBotherable)}
+                >
+                  {localBotherable ? 'botherable' : 'unbotherable'}
+                </div>
+              </div>
 
-        footer img {
-          margin-left: 0.5rem;
-        }
+              <div
+                class="flex flex-row justify-between  py-2"
+                onClick={() => setShowContextMenu(!showContextMenu)}
+              >
+                <span>Context</span>
 
-        footer a {
-          display: flex;
-          justify-content: center;
-          align-items: center;
-        }
+                <div class="text-gray-500 bg-gray-700 bg-opacity-75 rounded-full px-2 font-bold">
+                  none
+                </div>
+              </div>
 
-        a {
-          color: inherit;
-          text-decoration: none;
-        }
+              <div class="flex flex-row justify-between  py-2">
+                <span>Duration</span>
 
-        .title a {
-          color: #0070f3;
-          text-decoration: none;
-        }
+                <div class="text-gray-500 bg-gray-700 bg-opacity-75 rounded-full px-2 font-bold">
+                  a while
+                </div>
+              </div>
 
-        .title a:hover,
-        .title a:focus,
-        .title a:active {
-          text-decoration: underline;
-        }
+              <div class="flex flex-row justify-between  py-2">
+                <button
+                  class={`p-2  w-full rounded-lg ${
+                    localBotherable
+                      ? 'bg-green-400 hover:bg-green-600'
+                      : 'bg-red-400 hover:bg-red-600'
+                  }`}
+                  onClick={() => {
+                    setBotherable(localBotherable);
+                    setShowFullMenu(false);
+                  }}
+                >
+                  Update status
+                </button>
+              </div>
+            </div>
+          </div>
+        </CSSTransition>
+      </div>
 
-        .title {
-          margin: 0;
-          line-height: 1.15;
-          font-size: 4rem;
-        }
+      <CSSTransition
+        in={showContextMenu}
+        timeout={300}
+        classNames="alert"
+        unmountOnExit
+      >
+        <div class="absolute bottom-0 left-0  w-full">
+          <div class="absolute bottom-0 left-0  w-full  bg-black opacity-75 z-40 h-screen"></div>
 
-        .title,
-        .description {
-          text-align: center;
-        }
+          <div class="absolute bottom-0 left-0 right-0 m-3 p-2 background-gray rounded-lg z-50">
+            <div class="flex flex-col">
+              <div class="flex flex-row justify-between py-2">
+                <button class="text-red-500 bg-red-700 bg-opacity-25 rounded-full px-2 font-bold">
+                  clear
+                </button>
+                <button class="text-blue-500 bg-blue-700 bg-opacity-25 rounded-full px-2 font-bold" onClick={() => setShowContextMenu(false)}>
+                  done
+                </button>
+              </div>
 
-        .description {
-          line-height: 1.5;
-          font-size: 1.5rem;
-        }
+              <div class="flex flex-row justify-between py-2">
+                <div class="bg-gray-800 rounded-lg w-full p-2 flex flex-row justify-between align-center">
+                  <div class="flex flex-row">
+                    <svg
+                      class="h-6 w-6 text-white mr-2"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"
+                        clip-rule="evenodd"
+                      />
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M17 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2"
+                      />
+                    </svg>
 
-        code {
-          background: #fafafa;
-          border-radius: 5px;
-          padding: 0.75rem;
-          font-size: 1.1rem;
-          font-family: Menlo, Monaco, Lucida Console, Liberation Mono,
-            DejaVu Sans Mono, Bitstream Vera Sans Mono, Courier New, monospace;
-        }
+                    <span>I need silence.</span>
+                  </div>
 
-        .grid {
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          flex-wrap: wrap;
+                  <div class="flex w-4 justify-center items-center">
+                    <input
+                      type="checkbox"
+                      id="vehicle3"
+                      name="vehicle3"
+                      value="Boat"
+                    />
+                  </div>
+                </div>
+              </div>
 
-          max-width: 800px;
-          margin-top: 3rem;
-        }
+              <div class="flex flex-row justify-between py-2">
+                <div class="bg-gray-800 rounded-lg w-full p-2 flex flex-row justify-between align-center">
+                  <div class="flex flex-row">
+                    <svg
+                      class="h-6 w-6 text-white mr-2"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M21 3l-6 6m0 0V4m0 5h5M5 3a2 2 0 00-2 2v1c0 8.284 6.716 15 15 15h1a2 2 0 002-2v-3.28a1 1 0 00-.684-.948l-4.493-1.498a1 1 0 00-1.21.502l-1.13 2.257a11.042 11.042 0 01-5.516-5.517l2.257-1.128a1 1 0 00.502-1.21L9.228 3.683A1 1 0 008.279 3H5z"
+                      />
+                    </svg>
 
-        .card {
-          margin: 1rem;
-          flex-basis: 45%;
-          padding: 1.5rem;
-          text-align: left;
-          color: inherit;
-          text-decoration: none;
-          border: 1px solid #eaeaea;
-          border-radius: 10px;
-          transition: color 0.15s ease, border-color 0.15s ease;
-        }
+                    <span>I'm on a phone call.</span>
+                  </div>
 
-        .card:hover,
-        .card:focus,
-        .card:active {
-          color: #0070f3;
-          border-color: #0070f3;
-        }
+                  <div class="flex w-4 justify-center items-center">
+                    <input
+                      type="checkbox"
+                      id="vehicle3"
+                      name="vehicle3"
+                      value="Boat"
+                    />
+                  </div>
+                </div>
+              </div>
 
-        .card h3 {
-          margin: 0 0 1rem 0;
-          font-size: 1.5rem;
-        }
+              <div class="flex flex-row justify-between py-2">
+                <div class="bg-gray-800 rounded-lg w-full p-2 flex flex-row justify-between align-center">
+                  <div class="flex flex-row">
+                    <svg
+                      class="h-6 w-6 text-white mr-2"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"
+                      />
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"
+                      />
+                    </svg>
 
-        .card p {
-          margin: 0;
-          font-size: 1.25rem;
-          line-height: 1.5;
-        }
+                    <span>I'm on a video call.</span>
+                  </div>
 
-        .logo {
-          height: 1em;
-        }
+                  <div class="flex w-4 justify-center items-center">
+                    <input
+                      type="checkbox"
+                      id="vehicle3"
+                      name="vehicle3"
+                      value="Boat"
+                    />
+                  </div>
+                </div>
+              </div>
 
-        @media (max-width: 600px) {
-          .grid {
-            width: 100%;
-            flex-direction: column;
-          }
-        }
-      `}</style>
+              <div class="flex flex-row justify-between py-2">
+                <div class="bg-gray-800 rounded-lg w-full p-2 flex flex-row justify-between align-center">
+                  <div class="flex flex-row">
+                    <svg
+                      class="h-6 w-6 text-white mr-2"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path d="M20 2.5V0L6 2v12.17A3 3 0 0 0 5 14H3a3 3 0 0 0 0 6h2a3 3 0 0 0 3-3V5.71L18 4.3v7.88a3 3 0 0 0-1-.17h-2a3 3 0 0 0 0 6h2a3 3 0 0 0 3-3V2.5z" />
+                    </svg>
 
-      <style jsx global>{`
-        html,
-        body {
-          padding: 0;
-          margin: 0;
-          font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto,
-            Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue,
-            sans-serif;
-        }
+                    <span>I've got headphones on.</span>
+                  </div>
 
-        * {
-          box-sizing: border-box;
-        }
-      `}</style>
+                  <div class="flex w-4 justify-center items-center">
+                    <input
+                      type="checkbox"
+                      id="vehicle3"
+                      name="vehicle3"
+                      value="Boat"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div class="flex flex-row justify-between py-2">
+                <div class="bg-gray-800 rounded-lg w-full p-2 flex flex-row justify-between align-center">
+                  <div class="flex flex-row">
+                    <svg
+                      class="h-6 w-6 text-white mr-2"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path d="M10 20a10 10 0 1 1 0-20 10 10 0 0 1 0 20zM6.5 9a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zm7 0a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zm2.16 6a6 6 0 0 0-11.32 0h11.32z" />{' '}
+                    </svg>
+
+                    <span>I'm super stressed.</span>
+                  </div>
+
+                  <div class="flex w-4 justify-center items-center">
+                    <input
+                      type="checkbox"
+                      id="vehicle3"
+                      name="vehicle3"
+                      value="Boat"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div class="flex flex-row justify-between py-2">
+                <div class="bg-gray-800 rounded-lg w-full p-2 flex flex-row justify-between align-center">
+                  <div class="flex flex-row">
+                    <svg
+                      class="h-6 w-6 text-white mr-2"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"
+                        clip-rule="evenodd"
+                      />
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M17 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2"
+                      />
+                    </svg>
+
+                    <span>I'm taking a nap.</span>
+                  </div>
+
+                  <div class="flex w-4 justify-center items-center">
+                    <input
+                      type="checkbox"
+                      id="vehicle3"
+                      name="vehicle3"
+                      value="Boat"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </CSSTransition>
     </div>
-  )
-}
+  );
+};
+
+export default Index;
